@@ -27,6 +27,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -75,7 +79,10 @@ public class SignInActivity extends AppCompatActivity {
 
         if(currentUser!=null) {
             //hideProgressBar();
-            Intent intent = new Intent(getApplicationContext(), DashBoard.class);
+//            FirebaseFirestore db =  FirebaseFirestore.getInstance();
+//            Map<String, Object> userVehcile = new HashMap<>();
+//            userVehcile.put('name')
+            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
             startActivity(intent);
         }
     }
@@ -121,7 +128,7 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(getApplicationContext(),DashBoard.class);
+                            Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
