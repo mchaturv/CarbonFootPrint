@@ -13,6 +13,8 @@ import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.dal.carbonfootprint.profile.VehcileInfo;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,6 +30,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +53,7 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //check();
         setContentView(R.layout.activity_signin);
 
         signInButton = findViewById(R.id.googlesignIn);
@@ -74,6 +79,10 @@ public class SignInActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+
+    }
+
+    public void check(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
         //updateUI(currentUser)
 
@@ -82,12 +91,38 @@ public class SignInActivity extends AppCompatActivity {
 //            FirebaseFirestore db =  FirebaseFirestore.getInstance();
 //            Map<String, Object> userVehcile = new HashMap<>();
 //            userVehcile.put('name')
-            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            startActivity(intent);
+            String email = currentUser.getEmail();
+            String brand="Random";
+            System.out.println(email);
+            System.out.println("---**************************************************");
+            FirebaseFirestore.getInstance().collection("UserVehicle").whereEqualTo("User Id" ,email)
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if(task.isSuccessful()){
+                        System.out.println("****************************************************");
+                        System.out.println("**"+task.getResult().size());
+                        if(task.getResult().size()>0) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+
+                                Log.d("Document", doc.getId() + "-" + doc.getData());
+                                System.out.println(doc.getId() + "-" + doc.getData());
+                                System.out.println("*******************--------------*****************");
+                            }
+                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            Intent intent = new Intent(getApplicationContext(), VehicleInfoActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            });
+
         }
     }
 
-    private void startLoginActivity() {}
 
 
     @Override
@@ -105,7 +140,7 @@ public class SignInActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -127,12 +162,11 @@ public class SignInActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Intent intent = new Intent(getApplicationContext(),HomeActivity.class);
-                            startActivity(intent);
+                            check();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
+
                             Toast.makeText(SignInActivity.this, "Sorry auth failed.", Toast.LENGTH_SHORT).show();
                         }
 
@@ -159,3 +193,4 @@ public class SignInActivity extends AppCompatActivity {
 //    }
 
 }
+

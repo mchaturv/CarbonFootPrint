@@ -1,4 +1,4 @@
-package com.dal.carbonfootprint.home;
+package com.dal.carbonfootprint.profile;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -24,21 +24,21 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
-public class TravelFragment extends Fragment {
+public class VehcileInfoFragment extends Fragment {
 
-    private TravelViewModel travelViewModel;
+    private VehcileInfo travelViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         travelViewModel =
-                new ViewModelProvider(this).get(TravelViewModel.class);
+                new ViewModelProvider(this).get(VehcileInfo.class);
         System.out.println("Entered on oncreateview");
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        TextView carName = (TextView) root.findViewById(R.id.usercar);
-        TextView carBrand = (TextView)root.findViewById(R.id.userbrand);
-        TextView carModel = (TextView)root.findViewById(R.id.usermodel);
-        TextView carYear = (TextView)root.findViewById(R.id.useryear);
-        TextView carSep = (TextView)root.findViewById(R.id.userspec);
+        View root = inflater.inflate(R.layout.fragment_vehcileinfo, container, false);
+        TextView carName = (TextView) root.findViewById(R.id.vehcile_type);
+        TextView carBrand = (TextView)root.findViewById(R.id.manufacturer);
+        TextView carModel = (TextView)root.findViewById(R.id.model);
+        TextView carYear = (TextView)root.findViewById(R.id.year);
+        TextView carSep = (TextView)root.findViewById(R.id.vehcile_type);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("CarDetails")
                 .get()

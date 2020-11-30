@@ -1,16 +1,16 @@
-package com.dal.carbonfootprint.home;
+package com.dal.carbonfootprint.trips;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class TravelViewModel extends ViewModel {
+public class TripViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public TravelViewModel() {
+    public TripViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is notifications fragment");
     }
 
     public LiveData<String> getText() {

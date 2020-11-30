@@ -3,9 +3,13 @@ package com.dal.carbonfootprint.dashboard;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,9 +62,32 @@ public class DashBoardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         dashBoardData = new DashBoardData();
+        Spinner spinner = (Spinner) view.findViewById(R.id.years_spinner);
+    // Create an ArrayAdapter using the string array and a default spinner layout
+        String[] years = {"2020", "2019"};
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this.getContext(),
+                android.R.layout.simple_spinner_dropdown_item,years);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    // Specify the layout to use when the list of choices appears
+    // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                Log.v("item", (String) parent.getItemAtPosition(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+        });
         setupPie(view);
         setupBar(view);
+
     }
+
 
     private void setupBar(View view) {
 
