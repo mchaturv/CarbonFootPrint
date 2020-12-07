@@ -124,8 +124,8 @@ public class AddTripActivity extends AppCompatActivity {
                 String travelDate = dateFilledExposedDropdown.getText().toString();
 
                 //setting up document based on user provided trip details
-                docData.put("source", source);
-                docData.put("destination", destination);
+                docData.put("source", destination);
+                docData.put("destination", source);
                 docData.put("Distance", distance);
                 docData.put("date", selecteddate[0]);
                 docData.put("month", selecteddate[1]);

@@ -110,7 +110,7 @@ public class VehicleInfoActivity extends AppCompatActivity {
                 String vehcileBrandInput = brandFilledExposedDropdown.getText().toString();
                 String vehicletypeInput = vehicletypeFilledExposedDropdown.getText().toString();
                 String modelInput = vehicleModel.getText().toString();
-                int fuelInput = Integer.parseInt(fuelConsumption.getText().toString());
+                String fuelInput = fuelConsumption.getText().toString();
                 docData.put("Vehicle type", vehicletypeInput);
                 docData.put("Model Year", yearInput);
                 docData.put("Vehicle Brand", vehcileBrandInput);
