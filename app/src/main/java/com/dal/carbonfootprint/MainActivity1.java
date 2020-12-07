@@ -33,7 +33,7 @@ public class MainActivity1 extends AppCompatActivity {
     ImageView imageView;
     TextView textView;
 
-    ImageView sun, daylandscape, nightlandscape;
+    ImageView sun, daylandscape, nightlandscape, factory;
     View light,dark;
     DayNightSwitch animSwitch;
 
@@ -61,6 +61,7 @@ public class MainActivity1 extends AppCompatActivity {
         nightlandscape = findViewById(R.id.nightlandscape);
         light = findViewById(R.id.safeEarth);
         dark = findViewById(R.id.pollutedEarth);
+        factory = findViewById(R.id.factoryImage);
 
         animSwitch.setIsNight(true);
 
@@ -77,6 +78,7 @@ public class MainActivity1 extends AppCompatActivity {
         animSwitch.setIsNight(false);
 
         sun.animate().translationY(-280).setDuration(4300);
+        factory.animate().alpha(0).setDuration(3700);
         dark.animate().alpha(0).setDuration(4300);
         nightlandscape.animate().alpha(0).setDuration(4300);
 

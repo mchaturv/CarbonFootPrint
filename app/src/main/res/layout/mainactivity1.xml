@@ -64,6 +64,18 @@
         app:srcCompat="@drawable/day_landscape" />
 
     <ImageView
+        android:id="@+id/factoryImage"
+        android:layout_width="263dp"
+        android:layout_height="181dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.812"
+        app:srcCompat="@drawable/ic_factory" />
+
+    <ImageView
         android:id="@+id/nightlandscape"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -12,16 +12,19 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dal.carbonfootprint.R;
+import com.dal.carbonfootprint.dashboard.Travel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder>{
-    private ArrayList<Trip> listdata;
+    private ArrayList<Travel> listdata;
 
     // RecyclerView recyclerView;
-    public MyListAdapter(ArrayList<Trip> listdata) {
+    public MyListAdapter(ArrayList<Travel> listdata) {
         this.listdata = listdata;
     }
     @NotNull
@@ -35,10 +38,12 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Trip myListData = listdata.get(position);
-        holder.Name.setText(listdata.get(position).name);
-        holder.Date.setText(listdata.get(position).date);
-        holder.Distance.setText(listdata.get(position).distance);
+        final Travel myListData = listdata.get(position);
+        holder.Name.setText(listdata.get(position).getSource()+" to "+listdata.get(position).getDestination());
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String strDate = dateFormat.format(listdata.get(position).getTravelDate());
+        holder.Date.setText(strDate);
+        holder.Distance.setText(listdata.get(position).getDistance()+" Km");
         String uri = "@drawable/myresource";  // where myresource (without the extension) is the file
 
         if(position%3==0)

@@ -34,6 +34,13 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.Month;
 import java.time.Year;
@@ -41,35 +48,55 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * @author Carbon Vision
+ */
 public class DashBoardFragment extends Fragment {
 
-    DashBoardData dashBoardData;
+
     Year selectedYear = Year.now();
     Month selectedMonth;
+    static ArrayList<Float> monthlyCarbonEmission;
+    static int checkCount=0;
+    static int k=0;
 
+    /**
+     * Method to create the view associated to the fragment
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
-
+        monthlyCarbonEmission = new ArrayList<Float>();
         return root;
     }
 
+    /**
+     * Method to perform the operation once the view associated to the fragment is created
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        dashBoardData = new DashBoardData();
+
+        Vehcile vehcile = new Vehcile();
         Spinner spinner = (Spinner) view.findViewById(R.id.years_spinner);
-    // Create an ArrayAdapter using the string array and a default spinner layout
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
         String[] years = {"2020", "2019"};
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this.getContext(),
                 android.R.layout.simple_spinner_dropdown_item,years);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    // Specify the layout to use when the list of choices appears
-    // Apply the adapter to the spinner
+
+        // Specify the layout to use when the list of choices appears. Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
@@ -77,48 +104,126 @@ public class DashBoardFragment extends Fragment {
                                        int position, long id) {
                 Log.v("item", (String) parent.getItemAtPosition(position));
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // TODO Auto-generated method stub
             }
         });
-        setupPie(view);
-        setupBar(view);
+        getUserVehcileDetails(vehcile,view);
+    }
 
+    /**
+     * Method to fetch the User vehicle details from the fire store for the given user
+     * @param vehcile
+     * @param view
+     */
+    private void getUserVehcileDetails(Vehcile vehcile, View view){
+        FirebaseAuth mAuth;
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        // specifying the User Vehicle DB collection for the logged in user
+        db.collection("UserVehicle").whereEqualTo("User Id" ,currentUser.getEmail())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                // when the task to fetch the document is completed
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        System.out.println(document.getData().get("Vehicle Model Name").toString());
+                        vehcile.setVehicleType(document.getData().get("Vehicle type").toString());
+                        vehcile.setModelYear(document.getData().get("Model Year").toString());
+                        vehcile.setVehicleBrand(document.getData().get("Vehicle Brand").toString());
+                        vehcile.setModelName(document.getData().get("Vehicle Model Name").toString());
+                        vehcile.setFuelConsumption(Float.parseFloat(document.getData().get("Fuel Consumption").toString()));
+                    }
+                    checkCount=0;
+                    List<PieEntry> pieEntries= setupPieData(view,vehcile);
+                    setupBarData(view, vehcile);
+                } else {
+                    System.out.println("Error"+task.getException());
+                    Log.w("Error", "Error getting documents.", task.getException());
+                }
+            }
+        });
     }
 
 
-    private void setupBar(View view) {
+    /**
+     * Method for Setting up the Bar graph on the view
+     * @param view
+     * @param vehcile
+     */
+    private void setupBarData(View view, Vehcile vehcile) {
 
-        float[] monthlyCarbonEmission = {98.8f, 123.6f, 98.8f, 123.6f, 98.8f, 123.6f, 98.8f, 123.6f, 23.0f, 23.3f, 123.0f, 56.0f};
-        ArrayList<String> dateDislay = new ArrayList<>();
+        ArrayList<String> dateDisplay = new ArrayList<>();
 
+        // Arraylidt to store Bar Entries
         ArrayList<BarEntry> barEntries = new ArrayList<>();
-//        for (int i=0; i<monthlyCarbonEmission.length;i++){
-//            barEntries.add((new BarEntry(1,monthlyCarbonEmission[i])));
-//        }
+        // Taking out number of days for given month
         int noOfDays = selectedMonth.length(selectedYear.isLeap());
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        Month currentMonth = Month.of(cal.get(Calendar.MONTH));
-
+        Month currentMonth = Month.of(cal.get(Calendar.MONTH)+1);
         if (selectedYear.equals(Year.now()) && selectedMonth.equals(currentMonth)) {
             noOfDays = cal.get(Calendar.DAY_OF_MONTH);
         }
-
+        k=0;
         for (int i = 1; i <= noOfDays; i++) {
-            dateDislay.add(i + " "+ selectedMonth.toString().substring(0,3));
-            float ceResult = dashBoardData.calculateCarbonFootprint(i);
-            barEntries.add(new BarEntry(i, ceResult));
-        }
+            dateDisplay.add(i + " " + selectedMonth.toString().substring(0, 3));
 
+            // Setting up the firebase fire store auth
+            FirebaseAuth mAuth;
+            mAuth = FirebaseAuth.getInstance();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+
+            int finalI = i;
+            int finalNoOfDays = noOfDays;
+
+            // fetching up the user travel data for the given date
+            db.collection("TripDetails").whereEqualTo("User Id", currentUser.getEmail()).
+                    whereEqualTo("month", selectedMonth.getValue()).whereEqualTo("year", selectedYear.getValue()).whereEqualTo("date", i)
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                float totalValue = 0.0f;
+
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                            int distance = Integer.parseInt(document.getData().get("Distance").toString());
+                            float tempCF = distance * vehcile.getFuelConsumption() * 1.42f;
+                            // Entering the calculated carbon footprint to bar entries
+                            barEntries.add(new BarEntry(k, tempCF));
+                        }
+                        if (k == finalNoOfDays-1) {
+                            setupBar(view, barEntries, vehcile, dateDisplay);
+                        }
+                        k++;
+                    } else {
+                        Log.w("Error", "Error getting documents.", task.getException());
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Method for Setting up the Bar graph on the view
+     * @param view
+     * @param barEntries
+     * @param vehcile
+     * @param dateDislay
+     */
+    private void setupBar(View view, ArrayList<BarEntry> barEntries,Vehcile vehcile, ArrayList<String> dateDislay) {
+
+        //Assigning the data set to be display
         BarDataSet dataset = new BarDataSet(barEntries, "Carbon Emission For " + selectedMonth.toString());
         dataset.setColors(ColorTemplate.MATERIAL_COLORS);
         dataset.setValueTextColor(android.R.color.black);
         dataset.setValueTextSize(10f);
-
         dataset.setColors(ColorTemplate.COLORFUL_COLORS);
 
         BarData data = new BarData(dataset);
@@ -126,116 +231,141 @@ public class DashBoardFragment extends Fragment {
         data.setValueTextSize(10f);
         data.setBarWidth(0.9f);
 
+        // Defining the bar chart for the view
         BarChart chart = (BarChart) view.findViewById(R.id.barchart);
         chart.setData(data);
 
+        // Setting up the Bar chart feature and characteristic
         chart.setFitBars(true);
         chart.setDrawBarShadow(false);
         chart.setDrawValueAboveBar(true);
         chart.setMaxVisibleValueCount(50);
-        //chart.setPinchZoom(true);
         chart.setDrawGridBackground(true);
         chart.setPinchZoom(true);
         chart.setDrawValueAboveBar(true);
-        //chart.set
         chart.getDescription().setEnabled(false);
+
         XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(dateDislay));
-
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //xAxis.setCenterAxisLabels(true);
         xAxis.setGranularity(1f);
-        //xAxis.setAxisMinimum(1);
         xAxis.setLabelCount(dateDislay.size()/2);
         xAxis.setLabelRotationAngle(270f);
-
 
         chart.animateY(1500);
         chart.invalidate();
 
+        // Setting up the legends for the bar graph to be display
         Legend l = chart.getLegend();
-        l.setFormSize(10f); // set the size of the legend forms/shapes
-        l.setForm(Legend.LegendForm.CIRCLE); // set what type of form/shape should be used
+        l.setFormSize(10f);
+        l.setForm(Legend.LegendForm.CIRCLE);
         l.setTypeface(Typeface.MONOSPACE);
         l.setTextSize(12f);
         l.setTextColor(Color.BLACK);
-        l.setXEntrySpace(5f); // space between the legend entries on the x-axis
+        l.setXEntrySpace(5f);
         l.setYEntrySpace(5f);
     }
 
-    private void setupPie(View view) {
+    /**
+     * Method to set up the data for display carbon emission on monthly basis in pie chart
+     * @param view
+     * @param vehcile
+     * @return
+     */
+    private List<PieEntry> setupPieData(View view, Vehcile vehcile) {
         Year[] year = {Year.of(2019), Year.now()};
         ArrayList<Month> months = new ArrayList<Month>();
-        //Log.println(5, String.valueOf(Tag.CREATOR),String.valueOf(selectedYear));
         int month;
+        // looking for the year selected by the user through spinner in the rendered view
         if (selectedYear.equals(Year.now())) {
             Date date = new Date();
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
             month = cal.get(Calendar.MONTH);
-            selectedMonth = Month.of(month+1);
-            System.out.println(Month.of(month));
-            //Log.println(5, String.valueOf(Tag.CREATOR),String.valueOf(month));
+            selectedMonth = Month.of(month + 1);
         } else {
             month = 12;
             selectedMonth = Month.of(1);
         }
-        System.out.println(month);
         int i = 1;
-        while (i <= month+1) {
-            System.out.println(Month.of(i));
+        while (i <= month + 1) {
             months.add(Month.of(i));
             i++;
         }
+        checkCount= 0;
 
-        ArrayList<Float> monthlyCarbonEmission = new ArrayList<Float>();
-        //float[] monthlyCarbonEmission1 = {988.80f, 123.66f, 98.8f, 123.6f, 98.8f, 123.6f, 98.8f, 123.6f, 23.0f, 23.3f, 123.0f, 56.0f};
-
-        int k = 0;
-        for (Month m : months) {
-            float result = dashBoardData.calculateCarbonFootprint(m);
-            System.out.println(m.toString() + "-->" + result);
-            monthlyCarbonEmission.add(result);
-            //System.out.println(monthlyCarbonEmission1[k]);
-            k++;
-        }
-
-        //String[] monthName = {"Jan", "Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+        // Array List to store entries to be made in pie chart
         List<PieEntry> pieEntries = new ArrayList<>();
-        for (int j = 0; j < monthlyCarbonEmission.size(); j++) {
-            PieEntry entry = new PieEntry(monthlyCarbonEmission.get(j), months.get(j).toString().substring(0, 3));
-            //PieEntry entry = new PieEntry(monthlyCarbonEmission1[j] ,months.get(j).toString());
-            System.out.println(entry.toString());
-            pieEntries.add(entry);
-        }
 
+        for (Month m : months) {
+
+            // Setting up the firebase fire store auth
+            FirebaseAuth mAuth;
+            mAuth = FirebaseAuth.getInstance();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+
+            // fetching up the user travel data for the given month
+            db.collection("TripDetails").whereEqualTo("User Id", currentUser.getEmail()).
+                    whereEqualTo("month", m.getValue()).whereEqualTo("year", selectedYear.getValue())
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                float totalValue = 0.0f;
+
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                            int distance = Integer.parseInt(document.getData().get("Distance").toString());
+                            float tempCF = distance * vehcile.getFuelConsumption() * 1.42f;
+                            totalValue += tempCF;
+                        }
+
+                        // Storing monthly carbon emission into pie entry
+                        //monthlyCarbonEmission.add(totalValue);
+                        PieEntry entry = new PieEntry(totalValue, months.get(checkCount).toString().substring(0, 3));
+                        pieEntries.add(entry);
+                        if (checkCount == months.size() - 1) {
+                            setupPie(view, pieEntries, vehcile);
+                        }
+                        checkCount++;
+                    } else {
+                        Log.w("teja", "Error getting documents.", task.getException());
+                    }
+                }
+            });
+        }
+        return pieEntries;
+    }
+
+    /**
+     * Method to setup and display the pie chart into the view
+     * @param view
+     * @param pieEntries
+     * @param vehcile
+     */
+    private void setupPie(View view, List<PieEntry> pieEntries , Vehcile vehcile) {
+
+        // defining the Dataset to store the value for the piechart
         PieDataSet dataset = new PieDataSet(pieEntries, "Carbon Emission for "+selectedYear.toString());
         dataset.setSliceSpace(3f);
         dataset.setSelectionShift(5f);
         dataset.setColors(ColorTemplate.JOYFUL_COLORS);
         dataset.setValueTextColor(android.R.color.black);
         dataset.setValueTextSize(75);
-
-        dataset.setHighlightEnabled(true); // allow highlighting for DataSet
-        // set this to false to disable the drawing of highlight indicator (lines)
+        dataset.setHighlightEnabled(true);
 
         PieData data = new PieData(dataset);
         data.setValueTextColor(Color.BLACK);
-        //data.setValueFormatter(new IndexAxisValueFormatter(monthlyCarbonEmission.toArray()));
         data.setValueTextSize(15f);
 
         PieChart chart = (PieChart) view.findViewById(R.id.chart);
         chart.setData(data);
-        System.out.println(selectedMonth.toString());
-        System.out.println(selectedMonth.getValue());
-        System.out.println(pieEntries.get(0));
-        System.out.println(pieEntries.get(selectedMonth.getValue()-1));
-        PieEntry entry =  pieEntries.get(selectedMonth.getValue()-1);
+
+        pieEntries.get(selectedMonth.getValue()-1);
 
         Highlight high= new Highlight(selectedMonth.getValue()-1,0.0f,0);
-        // dataset index for piechart is always 0
+
         chart.highlightValues(new Highlight[] { high });
-        //chart.setUsePercentValues(true);
         chart.getDescription().setEnabled(false);
         chart.setHighlightPerTapEnabled(true);
         chart.setExtraOffsets(20, 1, 5, 2);
@@ -254,38 +384,19 @@ public class DashBoardFragment extends Fragment {
         chart.setDescription(description);
 
 
-
-//        Legend l = chart.getLegend();
-//        l.setFormSize(10f); // set the size of the legend forms/shapes
-//        l.setForm(Legend.LegendForm.CIRCLE); // set what type of form/shape should be used
-//        l.setTypeface(Typeface.MONOSPACE);
-//        l.setWordWrapEnabled(true);
-//        l.setTextSize(12);
-//        l.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-//        l.setXEntrySpace(5f); // space between the legend entries on the x-axis
-//        l.setYEntrySpace(5f);
-
-
-
+        /**
+         * On click listener for pie chart, on selection of the given month, data in the bar chart need to changed
+         */
         chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
-                //int x = chart.getData().getDataSetForEntry(e).getEntryIndex((PieEntry) e);
-                //selectedMonth = months.get(x);
-                //
-                System.out.println(h.toString());
-                System.out.println(h.getDataIndex()+","+h.getDataSetIndex());
                 selectedMonth = Month.of(((int)(h.getX()-1)));
-                setupBar(view);
-                //view.findViewById(R.id.barchart)
+                setupBarData(view, vehcile);
             }
-
             @Override
             public void onNothingSelected() {
-
             }
         });
-
     }
 }
 

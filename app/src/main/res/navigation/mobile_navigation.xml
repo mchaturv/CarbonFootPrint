@@ -16,7 +16,11 @@
         android:id="@+id/navigation_trips"
         android:name="com.dal.carbonfootprint.trips.TripsFragment"
         android:label="@string/title_travel"
-        tools:layout="@layout/fragment_trips" />
+        tools:layout="@layout/fragment_trips" >
+        <action
+            android:id="@+id/action_navigation_trips_to_navigation_editTrip"
+            app:destination="@id/navigation_addTrip" />
+    </fragment>
 
 
     <fragment
@@ -49,8 +53,14 @@
 
     <fragment
         android:id="@+id/navigation_vehcileinfo"
-        android:name="com.dal.carbonfootprint.profile.VehcileInfoFragment"
+        android:name="com.dal.carbonfootprint.profile.VehcileInfoEditActivity"
         android:label="FAQ"
         tools:layout="@layout/fragment_vehcileinfo" />
+
+    <fragment
+        android:id="@+id/navigation_addTrip"
+        android:name="com.dal.carbonfootprint.trips.AddTripFragment"
+        android:label="FAQ"
+        tools:layout="@layout/fragment_addtrips" />
 
 </navigation>

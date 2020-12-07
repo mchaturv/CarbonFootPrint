@@ -103,17 +103,14 @@ public class VehicleInfoActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Map<String, String> docData = new HashMap<>();
-
+                Map<String, Object> docData = new HashMap<>();
 
                 //vehicle type
-
-
                 String yearInput= yearFilledExposedDropdown.getText().toString();
                 String vehcileBrandInput = brandFilledExposedDropdown.getText().toString();
                 String vehicletypeInput = vehicletypeFilledExposedDropdown.getText().toString();
                 String modelInput = vehicleModel.getText().toString();
-                String fuelInput = fuelConsumption.getText().toString();
+                int fuelInput = Integer.parseInt(fuelConsumption.getText().toString());
                 docData.put("Vehicle type", vehicletypeInput);
                 docData.put("Model Year", yearInput);
                 docData.put("Vehicle Brand", vehcileBrandInput);
