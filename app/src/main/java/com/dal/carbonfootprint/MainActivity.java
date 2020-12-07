@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         nightlandscape.animate().alpha(0).setDuration(4300);
 
         bgapp= findViewById(R.id.bgapp1);
-        contentSection = findViewById(R.id.constraintLayout);
+        //contentSection = findViewById(R.id.constraintLayout);
 
         frombottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);
         fadein = AnimationUtils.loadAnimation(this, R.anim.fade_in);

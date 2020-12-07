@@ -1,6 +1,8 @@
 package com.dal.carbonfootprint.trips;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -16,10 +18,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
+import com.dal.carbonfootprint.HomeActivity;
 import com.dal.carbonfootprint.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -140,10 +148,10 @@ public class AddTripActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Fragment frag = new Fragment(R.layout.fragment_trips);
 
-                                FragmentManager fragmentManager = getSupportFragmentManager();
-                                fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, frag).commit();
+                                Intent i = new Intent(AddTripActivity.this, HomeActivity.class);
+                                startActivity(i);
+
                                 Toast.makeText(getApplicationContext(), "Trip Details Added Successfully", Toast.LENGTH_SHORT).show();
                             }
                         })

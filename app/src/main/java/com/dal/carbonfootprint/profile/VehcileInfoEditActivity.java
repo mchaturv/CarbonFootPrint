@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.dal.carbonfootprint.HomeActivity;
 import com.dal.carbonfootprint.R;
+import com.dal.carbonfootprint.trips.AddTripActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -144,12 +145,8 @@ public class VehcileInfoEditActivity extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        Fragment frag = new Fragment(R.layout.fragment_profile);
-
-                                                        FragmentManager fragmentManager = getSupportFragmentManager();
-                                                        fragmentManager.beginTransaction().replace(R.id.navigation_profile, frag).commit();
-                                                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                                        startActivity(intent);
+                                                        Intent i = new Intent(VehcileInfoEditActivity.this, VehcileInfoEditActivity.class);
+                                                        startActivity(i);
                                                         Toast.makeText(getApplicationContext(), "Vehicle Details Updated Successfully", Toast.LENGTH_SHORT).show();
                                                     }
                                                 })

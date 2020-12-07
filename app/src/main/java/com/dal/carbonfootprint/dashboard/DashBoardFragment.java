@@ -240,30 +240,36 @@ public class DashBoardFragment extends Fragment {
         chart.setDrawBarShadow(false);
         chart.setDrawValueAboveBar(true);
         chart.setMaxVisibleValueCount(50);
+        chart.setPinchZoom(true);
         chart.setDrawGridBackground(true);
         chart.setPinchZoom(true);
         chart.setDrawValueAboveBar(true);
         chart.getDescription().setEnabled(false);
-
         XAxis xAxis = chart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(dateDislay));
+
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1f);
-        xAxis.setLabelCount(dateDislay.size()/2);
+        xAxis.setXOffset(4f);
+        xAxis.setCenterAxisLabels(true);
+        xAxis.setGranularity(0.5f);
+        xAxis.setAxisMinimum(1);
+        xAxis.setLabelCount(dateDislay.size());
         xAxis.setLabelRotationAngle(270f);
+
 
         chart.animateY(1500);
         chart.invalidate();
 
-        // Setting up the legends for the bar graph to be display
         Legend l = chart.getLegend();
-        l.setFormSize(10f);
-        l.setForm(Legend.LegendForm.CIRCLE);
+        l.setFormSize(10f); // set the size of the legend forms/shapes
+        l.setForm(Legend.LegendForm.CIRCLE); // set what type of form/shape should be used
         l.setTypeface(Typeface.MONOSPACE);
         l.setTextSize(12f);
+        l.setXOffset(4f);
         l.setTextColor(Color.BLACK);
-        l.setXEntrySpace(5f);
-        l.setYEntrySpace(5f);
+        l.setXEntrySpace(5f); // space between the legend entries on the x-axis
+        l.setYEntrySpace(15f);
+
     }
 
     /**
