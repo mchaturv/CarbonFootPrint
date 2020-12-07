@@ -8,6 +8,11 @@ It will be integrated with Google maps that would help the user to keep track of
 It will also provide an analysis of the carbon footprint for the routes followed by the user over a period. 
 It will also provide the user with the alternate option to switch over to our clean source of transportation services.
 
+## Application(.apk) file
+
+<img src="/screenshots/logo.png" alt="alt text" width="100px" height="100px">
+<a id="raw-url" href="https://git.cs.dal.ca/mayank/ti-team-5-carbon-vision-app/-/raw/master/Carbon-Vision.apk">Download FILE</a>
+
 ## Target Audience:
 We are planning to target the people having their vehicle and transportation industry (Cabs Services, courier Service, etc.) in Nova Scotia first and then slowly transition to the other provinces in Canada,
 targeting people age between 14-60 years old of any gender. 
@@ -23,7 +28,7 @@ Dexter library: This library is used to ask permission from the user to access t
 
 ## Installation Notes:
 - Install Android Studio from https://developer.android.com/studio/install
-- Download or clone(https://git.cs.dal.ca/mayank/ti-team-5-carbon-footprint-app.git our repository from the Gitlab.
+- Download or clone(https://git.cs.dal.ca/mayank/ti-team-5-carbon-vision-app.git) our repository from the Gitlab.
 - Select open existing project option in android studio
 - Select our directory to open the project
 - Provide Kotlin SDK(version>=1.3.50) to run the application
@@ -39,6 +44,8 @@ Our application boasts some basic features such as:
 - Integrated with Google Maps API
 - Tips to reduce their carbon footprint
 - Periodic information/visualization of the carbon emission
+
+
 
 ## Application Flow
 
