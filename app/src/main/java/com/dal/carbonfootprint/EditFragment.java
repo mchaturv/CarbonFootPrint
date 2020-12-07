@@ -10,19 +10,24 @@ import android.view.ViewGroup;
 
 import com.dal.carbonfootprint.R;
 
-
+/**
+ * @Author Carbon Vision
+ * Edit Fragment
+ */
 public class EditFragment extends Fragment {
 
-
-
-
-
+    /**
+     * Overwriting OnCreate
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
 
+    /**
+     * Overwriting OnCreateView
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
