@@ -1,4 +1,4 @@
-# TI-Team 5-Carbon Footprint App
+# TI-Team 5-Carbon Vision App
 
 ## Mobile Application to determine Carbon Footprint(Carbon Emission)
 To overcome the challenge of global climate change and its consequences, we need to take part in it and should be aware of what role we are playing in it.
@@ -22,27 +22,73 @@ Bumptech library: This library is used to show the routes of user
 Dexter library: This library is used to ask permission from the user to access the device location.
 
 ## Installation Notes:
-- 1.Install Android Studio from https://developer.android.com/studio/install
-- 2.Download or clone(https://git.cs.dal.ca/mayank/ti-team-5-carbon-footprint-app/ our repository from the Gitlab.
-- 4.Select open existing project option in android studio
-- 3.Select our directory to open the project
-- 4.Provide Kotlin SDK(version>=1.3.50) to run the application
-- 5.Set the compileSdkVersion 29, minSdkVersion 24, targetSdkVersion 29
-- 6.While running on the emulator run on a device with API level 26 or higher.
+- Install Android Studio from https://developer.android.com/studio/install
+- Download or clone(https://git.cs.dal.ca/mayank/ti-team-5-carbon-footprint-app.git our repository from the Gitlab.
+- Select open existing project option in android studio
+- Select our directory to open the project
+- Provide Kotlin SDK(version>=1.3.50) to run the application
+- Set the compileSdkVersion 29, minSdkVersion 24, targetSdkVersion 29
+- While running on the emulator run on a device with API level 26 or higher.
 
-## Features:
-
-- 1. Calculate carbon emission for the user.
-- 2. Display travel user
 
 ## Functionalities 
 Our application boasts some basic features such as:
-- 1. Calculating carbon footprint 
-- 2. Interactive dashboard
-- 3. Notifications
-- 4. Integrated with Google Maps API
-- 5. Tips to reduce their carbon footprint
-- 6. Periodic information/visualization of the carbon emission
+- Calculating carbon footprint 
+- Interactive dashboard
+- Notifications
+- Integrated with Google Maps API
+- Tips to reduce their carbon footprint
+- Periodic information/visualization of the carbon emission
+
+## Application Flow
+
+### Splash Screen - Launch Screen 
+
+<img src="/screenshots/home.png" alt="alt text" width="160px" height="270px">
+
+
+### Login Screen - Login with google account
+
+##### User would be redirected to login screen where user would be asked to login with their Google account
+
+<img src="/screenshots/login.png" alt="alt text" width="160px" height="270px">
+
+
+### Add Vehicle Screen - Login with google account
+
+##### Once User login, for the first time user, application would ask user to provide in their Vehcile details
+
+
+<img src="/screenshots/vehicledetails.png" alt="alt text" width="160px" height="270px">
+
+
+
+### Dashboard Screen - Login with google account
+
+##### After providing vehicle details, user would be redirected to dashboard
+
+<img src="/screenshots/dashboard.png" alt="alt text" width="160px" height="270px">
+
+
+### Travel History Screen - Login with google account
+
+##### Second tab enable user to see travel/trips history of user. 
+
+<img src="/screenshots/triphistory1.png" alt="alt text" width="160px" height="270px">
+
+##### It also provide user to add trips manually 
+
+<img src="/screenshots/addtrip.png" alt="alt text" width="160px" height="270px">
+
+
+### Profile Management Screen - Manage USer profile
+
+<img src="/screenshots/profile.png" alt="alt text" width="160px" height="270px">
+
+##### User are allowed to edit provide vehicle details
+
+<img src="/screenshots/editvehicle1.png" alt="alt text" width="160px" height="270px">
+
 
 
 ## References:
